@@ -1,0 +1,11 @@
+<h1>现在时间：</h1>
+<p id="time"></p>
+<script>
+async function update() {
+  const res = await fetch("/api/time");
+  const data = await res.json();
+  document.getElementById("time").textContent = data.time;
+}
+setInterval(update, 1000);
+update();
+</script>
