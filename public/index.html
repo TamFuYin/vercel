@@ -9,6 +9,7 @@
   <textarea id="clip" rows="10" cols="50" placeholder="在这里输入内容..."></textarea><br>
   <button id="saveBtn">保存到云剪贴板</button>
   <button id="loadBtn">从云剪贴板加载内容</button>
+  <p id="status"></p>
   <p>现在时间：<span id="time"></span></p>
   <script type="module">
     import {initializeApp} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -27,17 +28,22 @@
 
   const clip=document.getElementById("clip");
 
+  const status=document.getElementById("status");
   async function saveClipboard() {
+    try{
     await setDoc(doc(db,"clipboard","global"),{text:clip.value});
-    alert("已保存到云剪贴板");
+    status.textContent="已保存到云剪贴板";
+    } catch(e){
+      status.textContent="保存失败："+e;
+    }
   }
   async function loadClipboard() {
     const docSnap=await getDoc(doc(db,"clipboard","global"));
     if(docSnap.exists()){
       clip.value=docSnap.data().text;
-      alert("已从云剪贴板加载内容");
+      status.textContent="已从云剪贴板加载内容";
     } else {
-      alert("云剪贴板为空");
+      status.textContent="云剪贴板为空";
     }
   }
   document.getElementById("saveBtn").onclick=saveClipboard;
