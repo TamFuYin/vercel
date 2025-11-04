@@ -1,4 +1,40 @@
-<h1>现在时间：</h1>
+<script type="module">
+  import {initializeApp} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import {getFirestore,doc,setDoc,getDoc} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  const firebaseConfig = {
+  apiKey: "AIzaSyDMEgdIWVbwRBmo6mvqFbY4Mjbl5OgHBfs",
+  authDomain: "tamfuyin-project.firebaseapp.com",
+  projectId: "tamfuyin-project",
+  storageBucket: "tamfuyin-project.firebasestorage.app",
+  messagingSenderId: "148865347259",
+  appId: "1:148865347259:web:8932f739908fa3565c839e",
+  measurementId: "G-GLKYCP75EH"
+};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+
+const clip=document.getElementById("clip");
+
+async function saveClipboard() {
+  await setDoc(doc(db,"clipboard","global"),{text:clip.value});
+  alert("已保存到云剪贴板");
+}
+async function loadClipboard() {
+  const docSnap=await getDoc(doc(db,"clipboard","global"));
+  if(docSnap.exists()){
+    clip.value=docSnap.data().text;
+    alert("已从云剪贴板加载内容");
+  } else {
+    alert("云剪贴板为空");
+  }
+  document.getElementById("saveBtn").onclick=saveClipboard;
+  document.getElementById("loadBtn").onclick=loadClipboard;
+  loadClipboard();
+}
+</script>
+
+
+<p>现在时间：</p>
 <p id="time"></p>
 <script>
 async function update() {
